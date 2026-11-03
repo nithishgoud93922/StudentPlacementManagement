@@ -1,0 +1,534 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Applications | PlacementHub</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: #071226;
+            color: #f8fafc;
+        }
+
+        nav {
+            background: #0b1930;
+            padding: 18px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #263b59;
+        }
+
+        nav strong {
+            color: #38bdf8;
+            font-size: 24px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 92%;
+            margin: 35px auto;
+        }
+
+        h1 {
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #a9bdd8;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .messages {
+            margin-bottom: 20px;
+        }
+
+        .message {
+            padding: 13px;
+            border-radius: 7px;
+            margin-bottom: 10px;
+        }
+
+        .success {
+            background: #14532d;
+            color: #dcfce7;
+        }
+
+        .danger {
+            background: #7f1d1d;
+            color: #fee2e2;
+        }
+
+        .warning {
+            background: #78350f;
+            color: #fef3c7;
+        }
+
+        /* SUMMARY CARDS */
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 30px;
+        }
+
+        .summary-card {
+            background: #111f37;
+            border: 1px solid #263b59;
+            border-radius: 12px;
+            padding: 22px;
+        }
+
+        .summary-card p {
+            color: #a9bdd8;
+            margin: 0;
+        }
+
+        .summary-number {
+            color: #38bdf8;
+            font-size: 32px;
+            font-weight: bold;
+            margin-top: 12px;
+        }
+
+        /* FILTER */
+
+        .filter-box {
+            background: #111f37;
+            border: 1px solid #263b59;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        .filter-box label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        select {
+            flex: 1;
+            min-width: 200px;
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid #475569;
+            background: #071226;
+            color: white;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        .filter-btn {
+            padding: 12px 22px;
+            background: #0284c7;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+
+        .clear-link {
+            color: #38bdf8;
+            text-decoration: none;
+            padding: 12px;
+        }
+
+        /* APPLICATION CARDS */
+
+        .application-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .application-card {
+            background: #111f37;
+            border: 1px solid #263b59;
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .application-card h2 {
+            color: #38bdf8;
+            font-size: 21px;
+            margin-top: 0;
+        }
+
+        .company {
+            color: #cbd5e1;
+            font-weight: bold;
+            margin-bottom: 18px;
+        }
+
+        .detail {
+            color: #cbd5e1;
+            line-height: 1.7;
+            margin: 8px 0;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 8px 13px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+            text-transform: capitalize;
+        }
+
+        .status-applied {
+            background: #1e3a8a;
+            color: #bfdbfe;
+        }
+
+        .status-shortlisted {
+            background: #164e63;
+            color: #a5f3fc;
+        }
+
+        .status-interview {
+            background: #713f12;
+            color: #fde68a;
+        }
+
+        .status-offered {
+            background: #14532d;
+            color: #bbf7d0;
+        }
+
+        .status-rejected {
+            background: #7f1d1d;
+            color: #fecaca;
+        }
+
+        .status-withdrawn {
+            background: #374151;
+            color: #e5e7eb;
+        }
+
+        .withdraw-btn {
+            width: 100%;
+            padding: 12px;
+            margin-top: 20px;
+            border: none;
+            border-radius: 6px;
+            background: #dc2626;
+            color: white;
+            font-weight: bold;
+        }
+
+        .withdraw-btn:hover {
+            background: #b91c1c;
+        }
+
+        .empty-state {
+            background: #111f37;
+            border: 1px solid #263b59;
+            border-radius: 12px;
+            padding: 45px 20px;
+            text-align: center;
+        }
+
+        .empty-state p {
+            color: #a9bdd8;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 30px;
+            color: #38bdf8;
+            text-decoration: none;
+        }
+
+        @media (max-width: 800px) {
+            .summary-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 500px) {
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 25px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <strong>PlacementHub</strong>
+
+        <a href="{{ url_for('dashboard') }}">
+            Back to Dashboard
+        </a>
+    </nav>
+
+
+    <main class="container">
+
+        <h1>My Applications</h1>
+
+        <p class="subtitle">
+            Track your job applications, check recruiter updates
+            and manage your application status.
+        </p>
+
+
+        <!-- FLASH MESSAGES -->
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+
+            {% if messages %}
+
+                <div class="messages">
+
+                    {% for category, message in messages %}
+
+                        <div class="message {{ category }}">
+                            {{ message }}
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% endif %}
+
+        {% endwith %}
+
+
+        <!-- APPLICATION SUMMARY -->
+
+        <section class="summary-grid">
+
+            <div class="summary-card">
+                <p>Total Applications</p>
+
+                <div class="summary-number">
+                    {{ total_applications }}
+                </div>
+            </div>
+
+            <div class="summary-card">
+                <p>Shortlisted</p>
+
+                <div class="summary-number">
+                    {{ status_counts['shortlisted'] }}
+                </div>
+            </div>
+
+            <div class="summary-card">
+                <p>Interview</p>
+
+                <div class="summary-number">
+                    {{ status_counts['interview'] }}
+                </div>
+            </div>
+
+            <div class="summary-card">
+                <p>Offers Received</p>
+
+                <div class="summary-number">
+                    {{ status_counts['offered'] }}
+                </div>
+            </div>
+
+        </section>
+
+
+        <!-- STATUS FILTER -->
+
+        <form method="GET"
+              action="{{ url_for('my_applications') }}"
+              class="filter-box">
+
+            <label for="status">
+                Filter Applications by Status
+            </label>
+
+            <div class="filter-row">
+
+                <select name="status" id="status">
+
+                    <option value="">
+                        All Applications
+                    </option>
+
+                    {% for status in [
+                        'applied',
+                        'shortlisted',
+                        'interview',
+                        'offered',
+                        'rejected',
+                        'withdrawn'
+                    ] %}
+
+                        <option
+                            value="{{ status }}"
+                            {% if selected_status == status %}selected{% endif %}
+                        >
+                            {{ status|capitalize }}
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+                <button type="submit" class="filter-btn">
+                    Apply Filter
+                </button>
+
+                <a href="{{ url_for('my_applications') }}"
+                   class="clear-link">
+                    Clear
+                </a>
+
+            </div>
+
+        </form>
+
+
+        <!-- APPLICATION LIST -->
+
+        {% if applications %}
+
+            <section class="application-list">
+
+                {% for application, job, company in applications %}
+
+                    <article class="application-card">
+
+                        <h2>{{ job.title }}</h2>
+
+                        <p class="company">
+                            {{ company.company_name }}
+                        </p>
+
+                        <p class="detail">
+                            <strong>Location:</strong>
+                            {{ job.location or 'Not specified' }}
+                        </p>
+
+                        <p class="detail">
+                            <strong>Package:</strong>
+
+                            {% if job.package_lpa is not none %}
+                                ₹{{ "%.2f"|format(job.package_lpa) }} LPA
+                            {% else %}
+                                Not specified
+                            {% endif %}
+                        </p>
+
+                        <p class="detail">
+                            <strong>Applied On:</strong>
+
+                            {{ application.applied_at.strftime('%d-%m-%Y') if application.applied_at else 'N/A' }}
+                        </p>
+
+                        <p class="detail">
+                            <strong>Application Status:</strong>
+                        </p>
+
+                        <span class="status status-{{ application.status }}">
+                            {{ application.status }}
+                        </span>
+
+
+                        {% if application.status == 'applied' %}
+
+                            <form
+                                method="POST"
+                                action="{{ url_for(
+                                    'withdraw_application',
+                                    application_id=application.id
+                                ) }}"
+                                onsubmit="return confirm('Are you sure you want to withdraw this application? You cannot apply again for the same job.');"
+                            >
+
+                                <button
+                                    type="submit"
+                                    class="withdraw-btn"
+                                >
+                                    Withdraw Application
+                                </button>
+
+                            </form>
+
+                        {% endif %}
+
+                    </article>
+
+                {% endfor %}
+
+            </section>
+
+        {% else %}
+
+            <section class="empty-state">
+
+                <h2>No Applications Found</h2>
+
+                {% if selected_status %}
+
+                    <p>
+                        No applications found with the selected status.
+                        Try another filter.
+                    </p>
+
+                {% else %}
+
+                    <p>
+                        You haven't applied for any jobs yet.
+                        Explore available opportunities and start applying.
+                    </p>
+
+                    <a href="{{ url_for('jobs') }}" class="back-link">
+                        Explore Jobs →
+                    </a>
+
+                {% endif %}
+
+            </section>
+
+        {% endif %}
+
+
+        <a href="{{ url_for('dashboard') }}" class="back-link">
+            ← Back to Dashboard
+        </a>
+
+    </main>
+
+</body>
+</html>

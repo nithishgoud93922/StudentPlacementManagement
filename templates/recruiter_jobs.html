@@ -1,0 +1,524 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recruiter Job Management | PlacementHub</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            color: #172b4d;
+        }
+
+        nav {
+            background: #142d50;
+            color: white;
+            padding: 18px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        nav h2 {
+            margin: 0;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .heading {
+            margin-bottom: 25px;
+        }
+
+        .heading h1 {
+            margin-bottom: 8px;
+            color: #142d50;
+        }
+
+        .heading p {
+            color: #64748b;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 22px;
+            border-radius: 12px;
+            border: 1px solid #dbe4f0;
+        }
+
+        .stat-card h3 {
+            margin: 0 0 12px;
+            font-size: 15px;
+            color: #64748b;
+        }
+
+        .stat-card h2 {
+            margin: 0;
+            font-size: 28px;
+            color: #087fa8;
+        }
+
+        .section {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid #dbe4f0;
+            margin-bottom: 30px;
+        }
+
+        .section h2 {
+            margin-top: 0;
+            color: #142d50;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 7px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        input:focus, textarea:focus {
+            border-color: #087fa8;
+        }
+
+        textarea {
+            min-height: 110px;
+            resize: vertical;
+        }
+
+        button, .btn {
+            display: inline-block;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 7px;
+            background: #087fa8;
+            color: white;
+            font-weight: bold;
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        button:hover, .btn:hover {
+            opacity: 0.9;
+        }
+
+        .btn-dark {
+            background: #142d50;
+        }
+
+        .btn-edit {
+            background: #64748b;
+        }
+
+        .btn-close {
+            background: #142d50;
+        }
+
+        .btn-open {
+            background: #16834a;
+        }
+
+        .job-card {
+            background: white;
+            border: 1px solid #dbe4f0;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 22px;
+        }
+
+        .job-card h2 {
+            margin-top: 0;
+            margin-bottom: 22px;
+            color: #142d50;
+        }
+
+        .job-details p {
+            margin: 17px 0;
+            line-height: 1.5;
+            font-size: 16px;
+        }
+
+        .job-details strong {
+            color: #142d50;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 10px 16px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .status-open {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-closed {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        .actions form {
+            margin: 0;
+        }
+
+        .flash {
+            padding: 14px;
+            margin-bottom: 15px;
+            border-radius: 7px;
+            font-weight: bold;
+        }
+
+        .flash-success {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .flash-danger {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .flash-warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 35px;
+            color: #64748b;
+            background: white;
+            border-radius: 10px;
+            border: 1px dashed #cbd5e1;
+        }
+
+        @media (max-width: 850px) {
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .stats, .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .full-width {
+                grid-column: auto;
+            }
+
+            .section, .job-card {
+                padding: 18px;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+
+            .actions a, .actions button {
+                text-align: center;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<nav>
+    <h2>PlacementHub | Recruiter</h2>
+    <a href="{{ url_for('dashboard') }}">Dashboard</a>
+</nav>
+
+<div class="container">
+
+    <div class="heading">
+        <h1>Recruiter Job Management</h1>
+        <p>Post jobs and manage your recruitment activities.</p>
+    </div>
+
+    <!-- FLASH MESSAGES -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+            <div class="flash flash-{{ category }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endwith %}
+
+    <!-- JOB STATISTICS -->
+    <div class="stats">
+
+        <div class="stat-card">
+            <h3>Total Jobs</h3>
+            <h2>{{ total_jobs }}</h2>
+        </div>
+
+        <div class="stat-card">
+            <h3>Open Jobs</h3>
+            <h2>{{ open_jobs }}</h2>
+        </div>
+
+        <div class="stat-card">
+            <h3>Closed Jobs</h3>
+            <h2>{{ closed_jobs }}</h2>
+        </div>
+
+        <div class="stat-card">
+            <h3>Total Applicants</h3>
+            <h2>{{ total_applicants }}</h2>
+        </div>
+
+    </div>
+
+    <!-- POST NEW JOB -->
+    <div class="section">
+
+        <h2>Post a New Job</h2>
+
+        <form method="POST" action="{{ url_for('recruiter_jobs') }}">
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label>Company Name</label>
+                    <input type="text"
+                           name="company_name"
+                           placeholder="Enter company name"
+                           required>
+                </div>
+
+                <div class="form-group">
+                    <label>Job Title</label>
+                    <input type="text"
+                           name="title"
+                           placeholder="Example: Python Developer"
+                           required>
+                </div>
+
+                <div class="form-group full-width">
+                    <label>Job Description</label>
+                    <textarea name="description"
+                              placeholder="Enter job description and required skills"
+                              required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Location</label>
+                    <input type="text"
+                           name="location"
+                           placeholder="Example: Hyderabad">
+                </div>
+
+                <div class="form-group">
+                    <label>Package (LPA)</label>
+                    <input type="number"
+                           name="package_lpa"
+                           step="0.01"
+                           min="0"
+                           placeholder="Example: 8">
+                </div>
+
+                <div class="form-group">
+                    <label>Minimum CGPA</label>
+                    <input type="number"
+                           name="minimum_cgpa"
+                           step="0.01"
+                           min="0"
+                           max="10"
+                           placeholder="Example: 6.0">
+                </div>
+
+                <div class="form-group">
+                    <label>Application Deadline</label>
+                    <input type="date"
+                           name="application_deadline">
+                </div>
+
+            </div>
+
+            <button type="submit">Post Job</button>
+
+        </form>
+
+    </div>
+
+    <!-- POSTED JOBS -->
+    <div class="section">
+
+        <h2>My Posted Jobs</h2>
+
+        {% if jobs %}
+
+            {% for job in jobs %}
+
+                <div class="job-card">
+
+                    <h2>{{ job.title }}</h2>
+
+                    <div class="job-details">
+
+                        <p>
+                            <strong>Company:</strong>
+                            {{ job.company.company_name if job.company else 'Not specified' }}
+                        </p>
+
+                        <p>
+                            <strong>Location:</strong>
+                            {{ job.location or 'Not specified' }}
+                        </p>
+
+                        <p>
+                            <strong>Package:</strong>
+                            {% if job.package_lpa is not none %}
+                                ₹{{ "%.2f"|format(job.package_lpa) }} LPA
+                            {% else %}
+                                Not specified
+                            {% endif %}
+                        </p>
+
+                        <p>
+                            <strong>Minimum CGPA:</strong>
+                            {% if job.minimum_cgpa is not none %}
+                                {{ "%.2f"|format(job.minimum_cgpa) }}/10
+                            {% else %}
+                                Not specified
+                            {% endif %}
+                        </p>
+
+                        <p>
+                            <strong>Deadline:</strong>
+                            {{ job.application_deadline.strftime('%Y-%m-%d') if job.application_deadline else 'Not specified' }}
+                        </p>
+
+                        <p>
+                            <strong>Applicants:</strong>
+                            {{ job_application_counts.get(job.id, 0) }}
+                        </p>
+
+                        <p>
+                            <strong>Status:</strong>
+
+                            {% if job.status == 'open' %}
+                                <span class="status status-open">Open</span>
+                            {% else %}
+                                <span class="status status-closed">Closed</span>
+                            {% endif %}
+                        </p>
+
+                        <p>
+                            <strong>Description:</strong>
+                            {{ job.description }}
+                        </p>
+
+                    </div>
+
+                    <!-- JOB ACTIONS -->
+                    <div class="actions">
+
+                        <a href="{{ url_for('recruiter_applicants') }}"
+                           class="btn">
+                            View Applicants
+                        </a>
+
+                        <a href="{{ url_for('edit_recruiter_job', job_id=job.id) }}"
+                           class="btn btn-edit">
+                            Edit Job
+                        </a>
+
+                        <form method="POST"
+                              action="{{ url_for('toggle_recruiter_job', job_id=job.id) }}">
+
+                            {% if job.status == 'open' %}
+                                <button type="submit" class="btn-close">
+                                    Close Job
+                                </button>
+                            {% elif job.status == 'closed' %}
+                                <button type="submit" class="btn-open">
+                                    Reopen Job
+                                </button>
+                            {% endif %}
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <div class="empty">
+                <h3>No Jobs Posted Yet</h3>
+                <p>Use the form above to post your first job.</p>
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+</body>
+</html>

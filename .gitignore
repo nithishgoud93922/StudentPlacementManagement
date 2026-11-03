@@ -1,0 +1,14 @@
+# Secrets
+app.env
+.env
+.env.*
+
+# Python
+venv/
+.venv/
+__pycache__/
+*.pyc
+
+# Private uploads
+uploads/
+instance/

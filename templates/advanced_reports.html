@@ -1,0 +1,200 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-4 mb-5">
+
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+        <div>
+            <h2>Advanced Placement Reports</h2>
+            <p class="text-muted">
+                Detailed placement analysis and institutional statistics
+            </p>
+        </div>
+
+        <div class="d-flex gap-2">
+            <a href="{{ url_for('export_advanced_reports') }}"
+               class="btn btn-success">
+                Download Excel CSV
+            </a>
+
+            <a href="{{ url_for('officer_dashboard') }}"
+               class="btn btn-secondary">
+                Back to Dashboard
+            </a>
+        </div>
+    </div>
+
+    <!-- SUMMARY CARDS -->
+    <div class="row g-3 mb-4">
+
+        <div class="col-md-3">
+            <div class="card shadow-sm p-3">
+                <h6>Total Students</h6>
+                <h3>{{ total_students }}</h3>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm p-3">
+                <h6>Placed Students</h6>
+                <h3 class="text-success">{{ placed_students }}</h3>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm p-3">
+                <h6>Not Placed</h6>
+                <h3 class="text-danger">{{ not_placed_students }}</h3>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm p-3">
+                <h6>Placement Percentage</h6>
+                <h3>{{ placement_percentage }}%</h3>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- BRANCH REPORT -->
+    <div class="card shadow-sm p-3 mb-4">
+        <h4>Branch-wise Placement Report</h4>
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped mt-3">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Branch</th>
+                        <th>Total Students</th>
+                        <th>Placed</th>
+                        <th>Not Placed</th>
+                        <th>Placement Percentage</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for row in branch_stats %}
+                    <tr>
+                        <td>{{ row.branch }}</td>
+                        <td>{{ row.total }}</td>
+                        <td>{{ row.placed }}</td>
+                        <td>{{ row.not_placed }}</td>
+                        <td>{{ row.percentage }}%</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5" class="text-center">
+                            No branch data available.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- CGPA REPORT -->
+    <div class="card shadow-sm p-3 mb-4">
+        <h4>CGPA-wise Placement Analysis</h4>
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped mt-3">
+                <thead class="table-dark">
+                    <tr>
+                        <th>CGPA Range</th>
+                        <th>Total Students</th>
+                        <th>Placed</th>
+                        <th>Placement Percentage</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for row in cgpa_stats %}
+                    <tr>
+                        <td>{{ row.range }}</td>
+                        <td>{{ row.total }}</td>
+                        <td>{{ row.placed }}</td>
+                        <td>{{ row.percentage }}%</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- GRADUATION YEAR REPORT -->
+    <div class="card shadow-sm p-3 mb-4">
+        <h4>Graduation Year Statistics</h4>
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped mt-3">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Graduation Year</th>
+                        <th>Total Students</th>
+                        <th>Placed</th>
+                        <th>Placement Percentage</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for row in graduation_stats %}
+                    <tr>
+                        <td>{{ row.year }}</td>
+                        <td>{{ row.total }}</td>
+                        <td>{{ row.placed }}</td>
+                        <td>{{ row.percentage }}%</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="4" class="text-center">
+                            No graduation-year data available.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- COMPANY REPORT -->
+    <div class="card shadow-sm p-3 mb-4">
+        <h4>Company-wise Placement Report</h4>
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped mt-3">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Company</th>
+                        <th>Total Jobs</th>
+                        <th>Total Applications</th>
+                        <th>Distinct Students Offered</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for row in company_stats %}
+                    <tr>
+                        <td>{{ row.company }}</td>
+                        <td>{{ row.jobs }}</td>
+                        <td>{{ row.applications }}</td>
+                        <td>{{ row.placed }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="4" class="text-center">
+                            No company data available.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

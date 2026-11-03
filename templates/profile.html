@@ -1,0 +1,367 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Profile | PlacementHub</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: #f1f5f9;
+            color: #1e293b;
+        }
+
+        nav {
+            background: #142d4e;
+            color: white;
+            padding: 18px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .container {
+            max-width: 750px;
+            margin: 35px auto;
+            padding: 0 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px #00000010;
+        }
+
+        h1 {
+            color: #142d4e;
+            margin-top: 0;
+        }
+
+        h2 {
+            color: #142d4e;
+            font-size: 19px;
+            margin-top: 30px;
+        }
+
+        .subtitle {
+            color: #64748b;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+
+        input[type="file"] {
+            background: #f8fafc;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: 2px solid #38bdf8;
+            border-color: #087eaa;
+        }
+
+        button {
+            background: #142d4e;
+            color: white;
+            border: none;
+            padding: 13px 22px;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #087eaa;
+        }
+
+        .delete-btn {
+            background: #dc2626;
+            margin-top: 10px;
+        }
+
+        .delete-btn:hover {
+            background: #991b1b;
+        }
+
+        .message {
+            padding: 12px;
+            margin-bottom: 12px;
+            border-radius: 6px;
+        }
+
+        .success {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .danger {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .resume-box {
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            padding: 18px;
+            margin-bottom: 20px;
+        }
+
+        .resume-link {
+            color: #087eaa;
+            font-weight: bold;
+            text-decoration: none;
+            word-break: break-word;
+        }
+
+        .hint {
+            color: #64748b;
+            font-size: 13px;
+            margin-top: 7px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #087eaa;
+            text-decoration: none;
+        }
+
+        @media (max-width: 500px) {
+            .card {
+                padding: 22px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <strong>PlacementHub</strong>
+        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+    </nav>
+
+    <main class="container">
+
+        <div class="card">
+
+            <h1>My Student Profile</h1>
+
+            <p class="subtitle">
+                Enter your academic details and skills to check eligibility
+                for placement opportunities.
+            </p>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="message {{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <form method="POST"
+                  action="{{ url_for('student_profile') }}"
+                  enctype="multipart/form-data">
+
+                <div class="form-group">
+                    <label for="roll_number">Roll Number</label>
+
+                    <input
+                        type="text"
+                        id="roll_number"
+                        name="roll_number"
+                        value="{{ profile.roll_number or '' }}"
+                        placeholder="Enter your college roll number"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="branch">Branch</label>
+
+                    <select id="branch" name="branch">
+
+                        <option value="">Select your branch</option>
+
+                        {% for branch_name in [
+                            'Information Technology',
+                            'Computer Science Engineering',
+                            'CSE (AI & ML)',
+                            'CSE (Data Science)',
+                            'Electronics and Communication Engineering',
+                            'Electrical and Electronics Engineering',
+                            'Mechanical Engineering',
+                            'Civil Engineering',
+                            'Other'
+                        ] %}
+
+                            <option
+                                value="{{ branch_name }}"
+                                {% if profile.branch == branch_name %}selected{% endif %}
+                            >
+                                {{ branch_name }}
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="graduation_year">Graduation Year</label>
+
+                    <input
+                        type="number"
+                        id="graduation_year"
+                        name="graduation_year"
+                        min="2000"
+                        max="2100"
+                        value="{{ profile.graduation_year or '' }}"
+                        placeholder="e.g. 2027"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="cgpa">CGPA (out of 10)</label>
+
+                    <input
+                        type="number"
+                        id="cgpa"
+                        name="cgpa"
+                        min="0"
+                        max="10"
+                        step="0.01"
+                        value="{{ profile.cgpa if profile.cgpa is not none else '' }}"
+                        placeholder="e.g. 7.50"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="skills">Technical Skills</label>
+
+                    <textarea
+                        id="skills"
+                        name="skills"
+                        placeholder="e.g. Python, Java, SQL, HTML, CSS"
+                    >{{ profile.skills or '' }}</textarea>
+                </div>
+
+                <h2>Resume Management</h2>
+
+                {% if profile.resume_path %}
+
+                    <div class="resume-box">
+
+                        <p><strong>Current Resume</strong></p>
+
+                        <a
+                            class="resume-link"
+                            href="{{ url_for('static', filename=profile.resume_path) }}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            View / Download Resume
+                        </a>
+
+                        <form method="POST"
+                              action="{{ url_for('student_profile') }}">
+                            <input type="hidden"
+                                   name="action"
+                                   value="delete_resume">
+
+                            <button type="submit"
+                                    class="delete-btn"
+                                    onclick="return confirm('Are you sure you want to delete your resume?');">
+                                Delete Resume
+                            </button>
+                        </form>
+
+                    </div>
+
+                {% else %}
+
+                    <p class="hint">No resume uploaded yet.</p>
+
+                {% endif %}
+
+                <div class="form-group">
+
+                    <label for="resume">
+                        {% if profile.resume_path %}
+                            Replace Resume
+                        {% else %}
+                            Upload Resume
+                        {% endif %}
+                    </label>
+
+                    <input
+                        type="file"
+                        id="resume"
+                        name="resume"
+                        accept=".pdf,.doc,.docx"
+                    >
+
+                    <p class="hint">
+                        Allowed formats: PDF, DOC, DOCX. Maximum size: 5 MB.
+                        Leave empty to keep your existing resume.
+                    </p>
+
+                </div>
+
+                <button type="submit">Save Profile</button>
+
+            </form>
+
+            <a class="back-link" href="{{ url_for('dashboard') }}">
+                ← Back to Dashboard
+            </a>
+
+        </div>
+
+    </main>
+
+</body>
+</html>

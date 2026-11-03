@@ -1,0 +1,1009 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Resume Generator | PlacementHub</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f1f5f9;
+            color: #222;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            background: #111827;
+            color: white;
+            padding: 16px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar h2 {
+            margin: 0;
+            font-size: 22px;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+        }
+
+        /* MAIN CONTAINER */
+        .container {
+            width: 92%;
+            max-width: 1100px;
+            margin: 30px auto;
+        }
+
+        .page-title {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .page-title h1 {
+            color: #172554;
+        }
+
+        .page-title p {
+            color: #64748b;
+        }
+
+        /* FORM */
+        .form-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.06);
+            margin-bottom: 30px;
+        }
+
+        .form-card h2 {
+            margin-top: 0;
+            color: #1e3a8a;
+        }
+
+        .profile-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .profile-item {
+            background: #f8fafc;
+            padding: 12px;
+            border-radius: 7px;
+            border: 1px solid #e2e8f0;
+            overflow-wrap: anywhere;
+        }
+
+        .profile-item strong {
+            display: block;
+            font-size: 13px;
+            color: #475569;
+            margin-bottom: 5px;
+        }
+
+        .profile-item span {
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 7px;
+            color: #334155;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 7px;
+            font-size: 14px;
+            font-family: Arial, sans-serif;
+        }
+
+        .form-group textarea {
+            min-height: 90px;
+            resize: vertical;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+
+        /* BUTTONS */
+        .generate-btn {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 13px 25px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        .generate-btn:hover {
+            background: #1d4ed8;
+        }
+
+        .generate-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .download-btn {
+            background: #15803d;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .download-btn:hover {
+            background: #166534;
+        }
+
+        /* LOADING */
+        .loading-message {
+            display: none;
+            margin-top: 15px;
+            color: #1d4ed8;
+            font-weight: bold;
+        }
+
+        .loading-message.active {
+            display: block;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 3px solid #bfdbfe;
+            border-top-color: #2563eb;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* WARNING */
+        .warning-message {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffe69c;
+            padding: 12px 15px;
+            margin-bottom: 18px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        /* RESUME TOOLBAR */
+        .resume-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .resume-toolbar h2 {
+            color: #172554;
+            margin: 0;
+        }
+
+        /* RESUME PAPER */
+        .resume-output {
+            width: 100%;
+            max-width: 850px;
+            min-height: 900px;
+            margin: 0 auto;
+            padding: 45px 55px;
+            background: #fff;
+            color: #292929;
+            border-radius: 5px;
+            box-shadow: 0 3px 18px rgba(0,0,0,0.10);
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 14px;
+            line-height: 1.6;
+            overflow-wrap: anywhere;
+        }
+
+        /* HEADER */
+        .resume-header {
+            text-align: center;
+            margin-bottom: 18px;
+        }
+
+        .resume-name {
+            margin: 0 0 5px;
+            color: #292929;
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            overflow-wrap: anywhere;
+        }
+
+        .resume-role {
+            margin: 0 0 15px;
+            color: #444;
+            font-size: 20px;
+        }
+
+        .resume-contact {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 8px 22px;
+            color: #555;
+            font-size: 12px;
+        }
+
+        /* DIVIDER */
+        .resume-divider {
+            border: 0;
+            border-top: 1px solid #777;
+            margin: 15px 0;
+        }
+
+        /* RESUME SECTIONS */
+        .resume-section {
+            margin: 0;
+            width: 100%;
+        }
+
+        .resume-section-title {
+            margin: 15px 0 8px;
+            color: #292929;
+            font-size: 18px;
+            font-weight: 800;
+            letter-spacing: 1.4px;
+            text-transform: uppercase;
+            text-align: left;
+        }
+
+        /*
+           PARAGRAPH ALIGNMENT
+           One complete paragraph uses the full available width.
+        */
+        .resume-section-body {
+            width: 100%;
+            text-align: justify;
+            text-align-last: left;
+            line-height: 1.6;
+            overflow-wrap: break-word;
+            word-break: normal;
+        }
+
+        .resume-line {
+            display: block;
+            width: 100%;
+            margin: 5px 0;
+            text-align: justify;
+            text-align-last: left;
+            text-justify: inter-word;
+            white-space: normal;
+            overflow-wrap: break-word;
+            word-break: normal;
+        }
+
+        .resume-bullet {
+            display: block;
+            width: 100%;
+            margin: 5px 0;
+            padding-left: 18px;
+            text-align: justify;
+            text-align-last: left;
+            text-justify: inter-word;
+            overflow-wrap: break-word;
+        }
+
+        /* SKILLS */
+        .resume-skills {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 5px 18px;
+            margin: 5px 0 8px;
+            padding-left: 20px;
+            text-align: left;
+        }
+
+        .resume-skills li {
+            padding-left: 2px;
+            overflow-wrap: anywhere;
+        }
+
+        /* EMPTY MESSAGE */
+        .empty-message {
+            text-align: center;
+            color: #64748b;
+            padding: 40px 10px;
+        }
+
+        /* MOBILE */
+        @media screen and (max-width: 650px) {
+            .profile-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-card {
+                padding: 18px;
+            }
+
+            .resume-output {
+                padding: 25px 18px;
+            }
+
+            .resume-name {
+                font-size: 25px;
+            }
+
+            .resume-contact {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .resume-skills {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .navbar {
+                padding: 15px;
+            }
+
+            .navbar a {
+                margin-left: 8px;
+            }
+        }
+
+        /* PRINT / PDF */
+        @media print {
+            @page {
+                size: A4 portrait;
+                margin: 12mm;
+            }
+
+            html,
+            body {
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                background: white !important;
+            }
+
+            body * {
+                visibility: hidden !important;
+            }
+
+            #resumePreview,
+            #resumePreview * {
+                visibility: visible !important;
+            }
+
+            #resumePreview {
+                position: absolute !important;
+                left: 0 !important;
+                top: 0 !important;
+                width: 100% !important;
+                max-width: none !important;
+                min-height: 0 !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                border: 0 !important;
+                border-radius: 0 !important;
+                box-shadow: none !important;
+                background: white !important;
+                color: #222 !important;
+                font-size: 9pt !important;
+                line-height: 1.4 !important;
+            }
+
+            #resumePreview .resume-name {
+                font-size: 22pt !important;
+            }
+
+            #resumePreview .resume-role {
+                font-size: 14pt !important;
+            }
+
+            #resumePreview .resume-section-title {
+                font-size: 11pt !important;
+                margin-top: 11px !important;
+            }
+
+            #resumePreview .resume-divider {
+                margin: 10px 0 !important;
+            }
+
+            #resumePreview .resume-section-body,
+            #resumePreview .resume-line,
+            #resumePreview .resume-bullet {
+                text-align: justify !important;
+                text-align-last: left !important;
+            }
+
+            #resumePreview .resume-skills {
+                grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+            }
+
+            .no-print,
+            .resume-toolbar {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <div class="navbar no-print">
+        <h2>PlacementHub</h2>
+
+        <div>
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('ai_resume') }}">AI Resume</a>
+        </div>
+    </div>
+
+    <div class="container">
+
+        <!-- PAGE TITLE -->
+        <div class="page-title no-print">
+            <h1>AI Resume Generator</h1>
+            <p>Create a professional, ATS-friendly resume using AI.</p>
+        </div>
+
+        <!-- FORM -->
+        <div class="form-card no-print">
+
+            <h2>Your Profile Details</h2>
+
+            <div class="profile-grid">
+
+                <div class="profile-item">
+                    <strong>Full Name</strong>
+                    <span>{{ student.full_name }}</span>
+                </div>
+
+                <div class="profile-item">
+                    <strong>Email</strong>
+                    <span>{{ student.email }}</span>
+                </div>
+
+                <div class="profile-item">
+                    <strong>Branch</strong>
+                    <span>
+                        {{ profile.branch if profile and profile.branch else 'Not provided' }}
+                    </span>
+                </div>
+
+                <div class="profile-item">
+                    <strong>CGPA</strong>
+                    <span>
+                        {{ profile.cgpa if profile and profile.cgpa is not none else 'Not provided' }}
+                    </span>
+                </div>
+
+                <div class="profile-item" style="grid-column: 1 / -1;">
+                    <strong>Technical Skills</strong>
+                    <span>
+                        {{ profile.skills if profile and profile.skills else 'Not provided' }}
+                    </span>
+                </div>
+
+            </div>
+
+            <form id="resumeForm"
+                  method="POST"
+                  action="{{ url_for('ai_resume') }}">
+
+                <div class="form-group">
+                    <label for="education">Education Details</label>
+
+                    <textarea
+                        id="education"
+                        name="education"
+                        placeholder="Example: B.Tech Information Technology, SNIST, 2024-2028"
+                        required>{{ form_data.education if form_data else '' }}</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="target_role">Target Job Role</label>
+
+                    <input
+                        type="text"
+                        id="target_role"
+                        name="target_role"
+                        placeholder="Example: Python Developer / Full Stack Developer"
+                        value="{{ form_data.target_role if form_data else '' }}"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label for="projects">Projects</label>
+
+                    <textarea
+                        id="projects"
+                        name="projects"
+                        placeholder="Enter your project names, technologies and descriptions">{{ form_data.projects if form_data else '' }}</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="achievements">
+                        Achievements and Certifications
+                    </label>
+
+                    <textarea
+                        id="achievements"
+                        name="achievements"
+                        placeholder="Enter achievements, certifications and internships">{{ form_data.achievements if form_data else '' }}</textarea>
+                </div>
+
+                <button
+                    id="generateBtn"
+                    type="submit"
+                    class="generate-btn">
+                    Generate AI Resume
+                </button>
+
+                <div
+                    id="loadingMessage"
+                    class="loading-message"
+                    role="status"
+                    aria-live="polite">
+
+                    <span class="spinner"></span>
+                    Generating your resume. Please wait...
+                </div>
+
+            </form>
+        </div>
+
+        <!-- GENERATED RESUME -->
+        {% if generated_resume %}
+
+        <div class="resume-section">
+
+            <!-- WARNING ONLY ON RESUME PAGE -->
+            {% if resume_warning %}
+                <div class="warning-message no-print">
+                    {{ resume_warning }}
+                </div>
+            {% endif %}
+
+            <div class="resume-toolbar no-print">
+                <h2>Your Generated Resume</h2>
+
+                <button
+                    type="button"
+                    class="download-btn"
+                    onclick="downloadResume()">
+                    Download PDF
+                </button>
+            </div>
+
+            <div id="resumePreview" class="resume-output">
+
+                <div id="formattedResume"></div>
+
+                <script type="application/json" id="resumeData">{{ generated_resume | tojson }}</script>
+
+            </div>
+
+        </div>
+
+        {% else %}
+
+        <div class="empty-message no-print">
+            <h3>Your resume will appear here.</h3>
+            <p>Fill in your details and click Generate AI Resume.</p>
+        </div>
+
+        {% endif %}
+
+    </div>
+
+    <script>
+
+        /* DOWNLOAD PDF */
+        function downloadResume() {
+            window.print();
+        }
+
+
+        /* FORMAT GENERATED RESUME */
+        function formatResume() {
+
+            const dataElement =
+                document.getElementById("resumeData");
+
+            const container =
+                document.getElementById("formattedResume");
+
+            if (!dataElement || !container) {
+                return;
+            }
+
+            let resumeText;
+
+            try {
+                resumeText = JSON.parse(
+                    dataElement.textContent || '""'
+                );
+            } catch (error) {
+                console.error("Resume parsing error:", error);
+                return;
+            }
+
+            const lines = String(resumeText || "")
+                .replace(/\r\n/g, "\n")
+                .replace(/\r/g, "\n")
+                .split("\n")
+                .map(line => line.trim());
+
+            /* ALL RECOGNIZED SECTION HEADINGS */
+            const headings = [
+                "CAREER OBJECTIVE",
+                "PROFESSIONAL SUMMARY",
+                "SUMMARY",
+                "ABOUT ME",
+                "EDUCATION",
+                "TECHNICAL SKILLS",
+                "SKILLS",
+                "PROJECTS",
+                "WORK EXPERIENCE",
+                "EXPERIENCE",
+                "INTERNSHIPS",
+                "ACHIEVEMENTS AND CERTIFICATIONS",
+                "CERTIFICATIONS",
+                "ACHIEVEMENTS",
+                "KEY STRENGTHS",
+                "STRENGTHS",
+                "DECLARATION",
+                "PERSONAL DETAILS"
+            ];
+
+            function isHeading(line) {
+
+                const normalized = line
+                    .toUpperCase()
+                    .replace(/:$/, "")
+                    .trim();
+
+                return headings.includes(normalized) ||
+                       normalized === "NO KEY STRENGTHS";
+            }
+
+
+            /* HEADER */
+            const firstHeadingIndex = lines.findIndex(
+                line => isHeading(line)
+            );
+
+            const headerLines = lines.slice(
+                0,
+                firstHeadingIndex >= 0
+                    ? firstHeadingIndex
+                    : lines.length
+            ).filter(line =>
+                line && !/^-{3,}$/.test(line)
+            );
+
+            const header = document.createElement("header");
+            header.className = "resume-header";
+
+            const name = document.createElement("div");
+            name.className = "resume-name";
+            name.textContent = headerLines[0] || "";
+
+            header.appendChild(name);
+
+
+            /* TARGET ROLE */
+            const roleLine = headerLines.find(
+                line => /^target role:/i.test(line)
+            );
+
+            if (roleLine) {
+
+                const role = document.createElement("div");
+                role.className = "resume-role";
+
+                role.textContent = roleLine
+                    .replace(/^target role:/i, "")
+                    .trim();
+
+                header.appendChild(role);
+            }
+
+
+            /* CONTACT INFORMATION */
+            const contactLines = headerLines.slice(1).filter(
+                line =>
+                    /^(email|phone|mobile|linkedin|location|website):/i.test(line)
+            );
+
+            const contact = document.createElement("div");
+            contact.className = "resume-contact";
+
+            contactLines.forEach(line => {
+
+                const item = document.createElement("span");
+
+                item.textContent = line.replace(
+                    /^[^:]+:\s*/,
+                    ""
+                );
+
+                contact.appendChild(item);
+            });
+
+            header.appendChild(contact);
+            container.appendChild(header);
+
+
+            /* TOP DIVIDER */
+            const topRule = document.createElement("hr");
+            topRule.className = "resume-divider";
+            container.appendChild(topRule);
+
+
+            let currentHeading = "";
+            let sectionLines = [];
+
+
+            /* RENDER SECTION */
+            function renderSection() {
+
+                if (!currentHeading) {
+                    return;
+                }
+
+                const section = document.createElement("section");
+                section.className = "resume-section";
+
+                const heading = document.createElement("h2");
+                heading.className = "resume-section-title";
+
+                heading.textContent = currentHeading;
+
+                section.appendChild(heading);
+
+                const body = document.createElement("div");
+                body.className = "resume-section-body";
+
+
+                /* SKILLS SECTION */
+                if (currentHeading.toUpperCase().includes("SKILL")) {
+
+                    const skills = sectionLines
+                        .join(" ")
+                        .split(/[,;|•\n]+/)
+                        .map(value => value.trim())
+                        .filter(Boolean);
+
+                    if (skills.length) {
+
+                        const list = document.createElement("ul");
+                        list.className = "resume-skills";
+
+                        skills.forEach(skill => {
+
+                            const li = document.createElement("li");
+
+                            li.textContent = skill.replace(
+                                /^[-*]\s*/,
+                                ""
+                            );
+
+                            list.appendChild(li);
+
+                        });
+
+                        body.appendChild(list);
+                    }
+
+                } else {
+
+                    /*
+                      JOIN NORMAL TEXT LINES INTO ONE PARAGRAPH.
+                      This prevents unwanted short lines.
+                    */
+
+                    let paragraphLines = [];
+
+                    function addParagraph() {
+
+                        if (paragraphLines.length === 0) {
+                            return;
+                        }
+
+                        const paragraph =
+                            document.createElement("p");
+
+                        paragraph.className = "resume-line";
+
+                        paragraph.textContent =
+                            paragraphLines.join(" ");
+
+                        body.appendChild(paragraph);
+
+                        paragraphLines = [];
+                    }
+
+
+                    sectionLines.forEach(line => {
+
+                        if (
+                            !line ||
+                            /^-{3,}$/.test(line)
+                        ) {
+                            return;
+                        }
+
+                        const isBullet =
+                            /^[-*•]\s*/.test(line);
+
+                        if (isBullet) {
+
+                            addParagraph();
+
+                            const bullet =
+                                document.createElement("p");
+
+                            bullet.className = "resume-bullet";
+
+                            bullet.textContent =
+                                "• " + line.replace(/^[-*•]\s*/, "");
+
+                            body.appendChild(bullet);
+
+                        } else {
+
+                            paragraphLines.push(line);
+
+                        }
+
+                    });
+
+                    addParagraph();
+                }
+
+
+                section.appendChild(body);
+                container.appendChild(section);
+
+
+                /* SECTION DIVIDER */
+                const divider = document.createElement("hr");
+                divider.className = "resume-divider";
+
+                container.appendChild(divider);
+            }
+
+
+            /* PROCESS RESUME CONTENT */
+            const contentLines = lines.slice(
+                firstHeadingIndex >= 0
+                    ? firstHeadingIndex
+                    : lines.length
+            );
+
+            contentLines.forEach(line => {
+
+                if (
+                    !line ||
+                    /^-{3,}$/.test(line)
+                ) {
+                    return;
+                }
+
+                if (isHeading(line)) {
+
+                    renderSection();
+
+                    /*
+                      Convert NO KEY STRENGTHS into KEY STRENGTHS
+                      as a separate section heading.
+                    */
+
+                    currentHeading =
+                        line.toUpperCase().trim() === "NO KEY STRENGTHS"
+                            ? "KEY STRENGTHS"
+                            : line.replace(/:$/, "").trim();
+
+                    sectionLines = [];
+
+                } else if (currentHeading) {
+
+                    sectionLines.push(line);
+
+                } else {
+
+                    currentHeading = "RESUME DETAILS";
+                    sectionLines.push(line);
+
+                }
+
+            });
+
+            renderSection();
+        }
+
+
+        /* PAGE LOAD */
+        document.addEventListener("DOMContentLoaded", function () {
+
+            formatResume();
+
+            /* PREVENT MULTIPLE FORM SUBMISSIONS */
+            const form =
+                document.getElementById("resumeForm");
+
+            if (form) {
+
+                form.addEventListener("submit", function (event) {
+
+                    if (!form.checkValidity()) {
+                        return;
+                    }
+
+                    const button =
+                        document.getElementById("generateBtn");
+
+                    const loading =
+                        document.getElementById("loadingMessage");
+
+                    if (button) {
+                        button.disabled = true;
+                        button.textContent = "Generating...";
+                    }
+
+                    if (loading) {
+                        loading.classList.add("active");
+                    }
+
+                });
+
+            }
+
+        });
+
+    </script>
+
+</body>
+</html>

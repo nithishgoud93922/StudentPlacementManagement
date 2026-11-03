@@ -1,0 +1,695 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Applicant Management | PlacementHub</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #071226;
+            color: #ffffff;
+            min-height: 100vh;
+        }
+
+        /* NAVIGATION */
+
+        .navbar {
+            height: 85px;
+            background: #122039;
+            border-bottom: 1px solid #263b5b;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 60px;
+        }
+
+        .logo {
+            color: #ffffff;
+            font-size: 30px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .nav-link {
+            color: #55c8ff;
+            text-decoration: none;
+            font-size: 17px;
+        }
+
+        /* MAIN CONTAINER */
+
+        .container {
+            max-width: 1450px;
+            margin: 40px auto;
+            padding: 0 25px;
+        }
+
+        .back-link {
+            display: inline-block;
+            color: #55c8ff;
+            text-decoration: none;
+            font-size: 19px;
+            margin-bottom: 35px;
+        }
+
+        h1 {
+            font-size: 40px;
+            margin-bottom: 20px;
+        }
+
+        .subtitle {
+            color: #b8c9e5;
+            font-size: 20px;
+            margin-bottom: 22px;
+        }
+
+        /* ACTION BUTTONS */
+
+        .action-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 25px 0;
+            align-items: center;
+        }
+
+        .print-button,
+        .home-button {
+            display: inline-block;
+            padding: 13px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+        }
+
+        .print-button {
+            background: #69c9f3;
+            color: #071226;
+        }
+
+        .print-button:hover {
+            background: #42b5e9;
+        }
+
+        .home-button {
+            background: #193b5b;
+            color: #ffffff;
+            border: 1px solid #456080;
+        }
+
+        .home-button:hover {
+            background: #263f60;
+        }
+
+        /* FLASH MESSAGES */
+
+        .flash-message {
+            padding: 15px 20px;
+            border-radius: 9px;
+            margin-bottom: 18px;
+            font-size: 17px;
+        }
+
+        .success {
+            background: #193b5b;
+            color: #ffffff;
+        }
+
+        .danger {
+            background: #582b36;
+            color: #ffffff;
+        }
+
+        .warning {
+            background: #57451e;
+            color: #ffffff;
+        }
+
+        /* TABLE */
+
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            background: #122039;
+            border: 1px solid #304767;
+            border-radius: 16px;
+        }
+
+        table {
+            width: 100%;
+            min-width: 1500px;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: #1a2d49;
+        }
+
+        th {
+            padding: 18px 14px;
+            text-align: left;
+            font-size: 16px;
+            border-bottom: 1px solid #304767;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 18px 14px;
+            font-size: 15px;
+            border-bottom: 1px solid #263b5b;
+            vertical-align: middle;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* STATUS */
+
+        .status {
+            display: inline-block;
+            padding: 9px 13px;
+            border-radius: 25px;
+            background: #193b5b;
+            color: #73d7ff;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        /* UPDATE FORM */
+
+        .update-form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            min-width: 180px;
+        }
+
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #456080;
+            border-radius: 8px;
+            background: #071226;
+            color: #ffffff;
+            font-size: 15px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        select:focus {
+            border-color: #65cfff;
+        }
+
+        select option {
+            background: #071226;
+            color: #ffffff;
+        }
+
+        .update-button {
+            width: 100%;
+            padding: 13px;
+            background: #69c9f3;
+            color: #071226;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .update-button:hover {
+            background: #42b5e9;
+        }
+
+        /* EMPTY MESSAGE */
+
+        .empty-message {
+            text-align: center;
+            padding: 35px;
+            color: #b8c9e5;
+            font-size: 18px;
+        }
+
+        /* MOBILE */
+
+        @media (max-width: 768px) {
+
+            .navbar {
+                padding: 0 20px;
+            }
+
+            .logo {
+                font-size: 24px;
+            }
+
+            .container {
+                margin: 25px auto;
+                padding: 0 15px;
+            }
+
+            h1 {
+                font-size: 30px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .print-button,
+            .home-button {
+                text-align: center;
+            }
+
+        }
+
+        /* PRINT SETTINGS */
+
+        @media print {
+
+            @page {
+                size: landscape;
+                margin: 10mm;
+            }
+
+            body {
+                background: #ffffff !important;
+                color: #000000 !important;
+                min-height: auto;
+            }
+
+            .navbar,
+            .back-link,
+            .action-buttons,
+            .update-form,
+            footer {
+                display: none !important;
+            }
+
+            .container {
+                width: 100%;
+                max-width: 100%;
+                margin: 0;
+                padding: 0;
+            }
+
+            h1 {
+                color: #000000 !important;
+                font-size: 25px;
+                margin-bottom: 10px;
+            }
+
+            .subtitle {
+                color: #333333 !important;
+                font-size: 14px;
+            }
+
+            .flash-message {
+                display: none !important;
+            }
+
+            .table-wrapper {
+                width: 100%;
+                overflow: visible;
+                background: #ffffff !important;
+                border: none;
+            }
+
+            table {
+                width: 100%;
+                min-width: 0;
+                border-collapse: collapse;
+            }
+
+            thead {
+                background: #eeeeee !important;
+            }
+
+            th,
+            td {
+                color: #000000 !important;
+                background: #ffffff !important;
+                border: 1px solid #777777 !important;
+                font-size: 9px;
+                padding: 6px;
+                word-break: break-word;
+            }
+
+            th {
+                background: #eeeeee !important;
+                font-weight: bold;
+            }
+
+            /* Hide only the Update Status column */
+
+            th:last-child,
+            td:last-child {
+                display: none !important;
+            }
+
+            .status {
+                color: #000000 !important;
+                background: #eeeeee !important;
+                border: 1px solid #999999;
+                padding: 4px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <!-- NAVIGATION BAR -->
+
+    <nav class="navbar">
+
+        <a href="{{ url_for('index') }}" class="logo">
+            PlacementHub
+        </a>
+
+        <a href="{{ url_for('logout') }}" class="nav-link">
+            Sign Out
+        </a>
+
+    </nav>
+
+    <!-- MAIN CONTENT -->
+
+    <main class="container">
+
+        <a href="{{ url_for('dashboard') }}" class="back-link">
+            ← Back to Dashboard
+        </a>
+
+        <h1>Applicant Management</h1>
+
+        <p class="subtitle">
+            Review students who applied for your job postings.
+        </p>
+
+        <!-- ACTION BUTTONS -->
+
+        <div class="action-buttons">
+
+            <button
+                type="button"
+                class="print-button"
+                onclick="window.print()">
+
+                Print Student Details
+
+            </button>
+
+            <a
+                href="{{ url_for('index') }}"
+                class="home-button">
+
+                ← Back to Home
+
+            </a>
+
+        </div>
+
+        <!-- FLASH MESSAGES -->
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+
+            {% if messages %}
+
+                {% for category, message in messages %}
+
+                    <div class="flash-message {{ category }}">
+                        {{ message }}
+                    </div>
+
+                {% endfor %}
+
+            {% endif %}
+
+        {% endwith %}
+
+        <!-- APPLICANTS TABLE -->
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>Student Name</th>
+
+                        <th>Email</th>
+
+                        <th>Roll Number</th>
+
+                        <th>Job Role</th>
+
+                        <th>Company</th>
+
+                        <th>Branch</th>
+
+                        <th>CGPA</th>
+
+                        <th>Graduation Year</th>
+
+                        <th>Skills</th>
+
+                        <th>Applied On</th>
+
+                        <th>Current Status</th>
+
+                        <th>Update Status</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for application, job, company, student, profile in applicants %}
+
+                    <tr>
+
+                        <!-- STUDENT NAME -->
+
+                        <td>
+                            {{ student.full_name }}
+                        </td>
+
+                        <!-- EMAIL -->
+
+                        <td>
+                            {{ student.email }}
+                        </td>
+
+                        <!-- ROLL NUMBER -->
+
+                        <td>
+                            {% if profile and profile.roll_number %}
+                                {{ profile.roll_number }}
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </td>
+
+                        <!-- JOB ROLE -->
+
+                        <td>
+                            {{ job.title }}
+                        </td>
+
+                        <!-- COMPANY -->
+
+                        <td>
+                            {{ company.company_name }}
+                        </td>
+
+                        <!-- BRANCH -->
+
+                        <td>
+                            {% if profile and profile.branch %}
+                                {{ profile.branch }}
+                            {% else %}
+                                Not provided
+                            {% endif %}
+                        </td>
+
+                        <!-- CGPA -->
+
+                        <td>
+                            {% if profile and profile.cgpa is not none %}
+                                {{ profile.cgpa }}
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </td>
+
+                        <!-- GRADUATION YEAR -->
+
+                        <td>
+                            {% if profile and profile.graduation_year %}
+                                {{ profile.graduation_year }}
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </td>
+
+                        <!-- SKILLS -->
+
+                        <td>
+                            {% if profile and profile.skills %}
+                                {{ profile.skills }}
+                            {% else %}
+                                Not provided
+                            {% endif %}
+                        </td>
+
+                        <!-- APPLICATION DATE -->
+
+                        <td>
+                            {% if application.applied_at %}
+                                {{ application.applied_at.strftime('%d-%m-%Y') }}
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </td>
+
+                        <!-- CURRENT STATUS -->
+
+                        <td>
+
+                            <span class="status">
+                                {{ application.status|capitalize }}
+                            </span>
+
+                        </td>
+
+                        <!-- UPDATE STATUS -->
+
+                        <td>
+
+                            <form
+                                class="update-form"
+                                method="POST"
+                                action="{{ url_for('recruiter_applicants') }}">
+
+                                <input
+                                    type="hidden"
+                                    name="application_id"
+                                    value="{{ application.id }}">
+
+                                <select
+                                    name="status"
+                                    required
+                                    autocomplete="off"
+                                    class="status-select">
+
+                                    <option value="" selected disabled>
+                                        Select status
+                                    </option>
+
+                                    <option value="shortlisted">
+                                        Shortlisted
+                                    </option>
+
+                                    <option value="interview">
+                                        Interview
+                                    </option>
+
+                                    <option value="offered">
+                                        Offered
+                                    </option>
+
+                                    <option value="rejected">
+                                        Rejected
+                                    </option>
+
+                                </select>
+
+                                <button
+                                    type="submit"
+                                    class="update-button">
+
+                                    Update Status
+
+                                </button>
+
+                            </form>
+
+                        </td>
+
+                    </tr>
+
+                    {% else %}
+
+                    <tr>
+
+                        <td colspan="12" class="empty-message">
+
+                            No students have applied for your jobs yet.
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </main>
+
+    <!-- RESET STATUS DROPDOWNS -->
+
+    <script>
+
+        function resetStatusDropdowns() {
+
+            document.querySelectorAll(".status-select").forEach(select => {
+
+                select.selectedIndex = 0;
+
+            });
+
+        }
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            resetStatusDropdowns
+        );
+
+        window.addEventListener(
+            "pageshow",
+            resetStatusDropdowns
+        );
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,165 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Job | PlacementHub</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 30px 15px;
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            color: #172b4d;
+        }
+
+        .container {
+            max-width: 750px;
+            margin: auto;
+            padding: 30px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+        }
+
+        h1 {
+            margin-top: 0;
+            color: #142d50;
+        }
+
+        .subtitle {
+            color: #64748b;
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin: 16px 0 7px;
+            font-weight: bold;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 7px;
+            font-size: 15px;
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        button, .back {
+            display: inline-block;
+            margin-top: 22px;
+            padding: 12px 22px;
+            border: none;
+            border-radius: 7px;
+            background: #087fa8;
+            color: white;
+            font-weight: bold;
+            font-size: 15px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .back {
+            margin-left: 8px;
+            background: #142d50;
+        }
+
+        .flash {
+            padding: 12px;
+            margin-bottom: 12px;
+            border-radius: 7px;
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        @media (max-width: 600px) {
+            .row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <h1>Edit Job</h1>
+    <p class="subtitle">Update your job posting details.</p>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+            <div class="flash">{{ message }}</div>
+        {% endfor %}
+    {% endwith %}
+
+    <form method="POST">
+
+        <label>Company Name</label>
+        <input type="text" name="company_name"
+               value="{{ job.company.company_name if job.company else '' }}"
+               required>
+
+        <label>Job Title</label>
+        <input type="text" name="title"
+               value="{{ job.title }}" required>
+
+        <label>Job Description</label>
+        <textarea name="description" required>{{ job.description }}</textarea>
+
+        <label>Location</label>
+        <input type="text" name="location"
+               value="{{ job.location or '' }}">
+
+        <div class="row">
+            <div>
+                <label>Package (LPA)</label>
+                <input type="number" name="package_lpa"
+                       step="0.01" min="0"
+                       value="{{ job.package_lpa if job.package_lpa is not none else '' }}">
+            </div>
+
+            <div>
+                <label>Minimum CGPA</label>
+                <input type="number" name="minimum_cgpa"
+                       step="0.01" min="0" max="10"
+                       value="{{ job.minimum_cgpa if job.minimum_cgpa is not none else '' }}">
+            </div>
+        </div>
+
+        <label>Application Deadline</label>
+        <input type="date" name="application_deadline"
+               value="{{ job.application_deadline.isoformat() if job.application_deadline else '' }}">
+
+        <button type="submit">Save Changes</button>
+
+        <a href="{{ url_for('recruiter_jobs') }}" class="back">
+            Cancel
+        </a>
+
+    </form>
+</div>
+</body>
+</html>

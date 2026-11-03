@@ -1,0 +1,412 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <!-- PAGE HEADER -->
+    <div class="d-flex justify-content-between align-items-center flex-wrap mb-4">
+        <div>
+            <h2 class="fw-bold mb-1">Placement Officer Dashboard</h2>
+            <p class="text-muted mb-0">
+                Monitor students, recruiters, jobs and placement activities.
+            </p>
+        </div>
+        <span class="badge bg-primary p-2">Officer Panel</span>
+    </div>
+
+    <!-- QUICK ACTIONS -->
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+            <h5 class="fw-bold mb-3">Quick Actions</h5>
+
+            <div class="d-flex flex-wrap gap-2">
+                <a href="{{ url_for('officer_students') }}"
+                   class="btn btn-primary">
+                    <i class="fas fa-users me-1"></i>
+                    Manage Students
+                </a>
+
+                <a href="{{ url_for('student_analytics') }}"
+                   class="btn btn-success">
+                    <i class="fas fa-chart-line me-1"></i>
+                    Student Performance Analytics
+                </a>
+
+                <a href="{{ url_for('advanced_placement_reports') }}"
+                   class="btn btn-dark">
+                    <i class="fas fa-file-alt me-1"></i>
+                    Advanced Placement Reports
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN STATISTICS -->
+    <h5 class="fw-bold mb-3">Overall Statistics</h5>
+
+    <div class="row g-3 mb-4">
+
+        <div class="col-md-3 col-sm-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <p class="text-muted mb-1">Total Students</p>
+                    <h2 class="fw-bold text-primary">{{ total_students }}</h2>
+                    <i class="fas fa-user-graduate text-primary"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-sm-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <p class="text-muted mb-1">Total Recruiters</p>
+                    <h2 class="fw-bold text-success">{{ total_recruiters }}</h2>
+                    <i class="fas fa-building text-success"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-sm-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <p class="text-muted mb-1">Total Jobs</p>
+                    <h2 class="fw-bold text-info">{{ total_jobs }}</h2>
+                    <i class="fas fa-briefcase text-info"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-sm-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <p class="text-muted mb-1">Total Applications</p>
+                    <h2 class="fw-bold text-warning">{{ total_applications }}</h2>
+                    <i class="fas fa-file-alt text-warning"></i>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- PLACEMENT STATISTICS -->
+    <h5 class="fw-bold mb-3">Placement Overview</h5>
+
+    <div class="row g-3 mb-4">
+
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <p class="text-muted mb-1">Placed Students</p>
+                    <h2 class="fw-bold text-success">{{ placed_students }}</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <p class="text-muted mb-1">Not Placed Students</p>
+                    <h2 class="fw-bold text-danger">{{ not_placed_students }}</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <p class="text-muted mb-1">Placement Percentage</p>
+                    <h2 class="fw-bold text-primary">
+                        {{ placement_percentage }}%
+                    </h2>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- APPLICATION STATUS -->
+    <h5 class="fw-bold mb-3">Application Status</h5>
+
+    <div class="row g-3 mb-4">
+
+        <div class="col-md-3 col-sm-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <p class="text-muted mb-1">Applied</p>
+                    <h3 class="text-primary">{{ total_applied }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-sm-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <p class="text-muted mb-1">Shortlisted</p>
+                    <h3 class="text-info">{{ total_shortlisted }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-sm-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <p class="text-muted mb-1">Interview</p>
+                    <h3 class="text-warning">{{ total_interview }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-sm-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <p class="text-muted mb-1">Rejected</p>
+                    <h3 class="text-danger">{{ total_rejected }}</h3>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- CHARTS -->
+    <h5 class="fw-bold mb-3">Placement Analytics</h5>
+
+    <div class="row g-4 mb-4">
+
+        <div class="col-lg-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <h5 class="fw-bold mb-3">Branch-wise Student Distribution</h5>
+                    <div style="height:300px;">
+                        <canvas id="branchChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <h5 class="fw-bold mb-3">Application Status Distribution</h5>
+                    <div style="height:300px;">
+                        <canvas id="statusChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <h5 class="fw-bold mb-3">Placement Overview</h5>
+                    <div style="height:300px;">
+                        <canvas id="placementChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <h5 class="fw-bold mb-3">Company-wise Offers</h5>
+                    <div style="height:300px;">
+                        <canvas id="companyChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- COMPANY REPORT -->
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+            <h5 class="fw-bold mb-3">Company-wise Placement Details</h5>
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Company</th>
+                            <th>Total Jobs</th>
+                            <th>Total Offers</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for company, jobs, offers in company_stats %}
+                        <tr>
+                            <td>{{ company }}</td>
+                            <td>{{ jobs }}</td>
+                            <td>{{ offers }}</td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="3" class="text-center text-muted">
+                                No company data available.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- RECENT APPLICATIONS -->
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+            <h5 class="fw-bold mb-3">Recent Student Applications</h5>
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Student</th>
+                            <th>Job Role</th>
+                            <th>Company</th>
+                            <th>Status</th>
+                            <th>Applied At</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for application, student, job, company in recent_applications %}
+                        <tr>
+                            <td>{{ student.full_name }}</td>
+                            <td>{{ job.title }}</td>
+                            <td>{{ company.company_name }}</td>
+                            <td>
+                                {% if application.status == "offered" %}
+                                    <span class="badge bg-success">Offered</span>
+                                {% elif application.status == "rejected" %}
+                                    <span class="badge bg-danger">Rejected</span>
+                                {% elif application.status == "shortlisted" %}
+                                    <span class="badge bg-info">Shortlisted</span>
+                                {% elif application.status == "interview" %}
+                                    <span class="badge bg-warning text-dark">Interview</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">
+                                        {{ application.status|title }}
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {{ application.applied_at.strftime("%d-%m-%Y") if application.applied_at else "N/A" }}
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="5" class="text-center text-muted">
+                                No applications available.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- CHART.JS -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const branchLabels = JSON.parse('{{ branch_labels|tojson|safe }}');
+    const branchValues = JSON.parse('{{ branch_values|tojson|safe }}');
+
+    const statusLabels = JSON.parse('{{ status_labels|tojson|safe }}');
+    const statusValues = JSON.parse('{{ status_values|tojson|safe }}');
+
+    const companyLabels = JSON.parse('{{ company_labels|tojson|safe }}');
+    const companyValues = JSON.parse('{{ company_offer_values|tojson|safe }}');
+
+    const placedStudents = JSON.parse('{{ placed_students|tojson|safe }}');
+    const notPlacedStudents = JSON.parse('{{ not_placed_students|tojson|safe }}');
+
+    // Branch-wise chart
+    new Chart(document.getElementById("branchChart"), {
+        type: "pie",
+        data: {
+            labels: branchLabels,
+            datasets: [{
+                data: branchValues
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    });
+
+    // Application status chart
+    new Chart(document.getElementById("statusChart"), {
+        type: "bar",
+        data: {
+            labels: statusLabels,
+            datasets: [{
+                label: "Applications",
+                data: statusValues
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        precision: 0
+                    }
+                }
+            }
+        }
+    });
+
+    // Placement chart
+    new Chart(document.getElementById("placementChart"), {
+        type: "doughnut",
+        data: {
+            labels: ["Placed", "Not Placed"],
+            datasets: [{
+                data: [placedStudents, notPlacedStudents]
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    });
+
+    // Company-wise offers chart
+    new Chart(document.getElementById("companyChart"), {
+        type: "bar",
+        data: {
+            labels: companyLabels,
+            datasets: [{
+                label: "Offers",
+                data: companyValues
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        precision: 0
+                    }
+                }
+            }
+        }
+    });
+
+});
+</script>
+
+{% endblock %}

@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Student Management | PlacementHub</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f3f6fc;
+            color: #1e293b;
+        }
+
+        .navbar {
+            background: #172554;
+            color: white;
+            padding: 18px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .navbar h2 {
+            font-size: 24px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .nav-links a:hover {
+            color: #93c5fd;
+        }
+
+        .container {
+            width: 92%;
+            max-width: 1500px;
+            margin: 30px auto;
+        }
+
+        .back-links {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+        }
+
+        .back-links a {
+            color: #1d4ed8;
+            font-weight: 600;
+            text-decoration: underline;
+            font-size: 16px;
+        }
+
+        .back-links a:hover {
+            color: #1e40af;
+        }
+
+        .page-heading {
+            margin-bottom: 25px;
+        }
+
+        .page-heading h1 {
+            font-size: 32px;
+            color: #172554;
+            margin-bottom: 12px;
+        }
+
+        .page-heading p {
+            color: #64748b;
+            font-size: 17px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .search-form {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .search-form input,
+        .search-form select {
+            padding: 13px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 15px;
+            outline: none;
+            min-width: 220px;
+            background: white;
+        }
+
+        .search-form input:focus,
+        .search-form select:focus {
+            border-color: #2563eb;
+        }
+
+        .btn {
+            padding: 13px 18px;
+            border: none;
+            border-radius: 8px;
+            background: #1e3a8a;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background: #1d4ed8;
+        }
+
+        .reset-link {
+            color: #1d4ed8;
+            font-size: 15px;
+        }
+
+        .table-heading {
+            font-size: 21px;
+            margin-bottom: 22px;
+            color: #1e293b;
+        }
+
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            min-width: 1200px;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #eaf0fb;
+            color: #172554;
+            padding: 16px;
+            text-align: left;
+            font-size: 15px;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 16px;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 14px;
+            vertical-align: middle;
+        }
+
+        tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        .skills {
+            min-width: 220px;
+            max-width: 350px;
+            line-height: 1.6;
+            overflow-wrap: anywhere;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 7px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .active {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .inactive {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .action-form {
+            display: inline;
+        }
+
+        .action-btn {
+            border: none;
+            padding: 9px 13px;
+            border-radius: 6px;
+            color: white;
+            cursor: pointer;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+
+        .deactivate-btn {
+            background: #dc2626;
+        }
+
+        .deactivate-btn:hover {
+            background: #b91c1c;
+        }
+
+        .activate-btn {
+            background: #16a34a;
+        }
+
+        .activate-btn:hover {
+            background: #15803d;
+        }
+
+        .flash {
+            padding: 13px 16px;
+            border-radius: 8px;
+            margin-bottom: 18px;
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .empty-message {
+            padding: 25px;
+            text-align: center;
+            color: #64748b;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 25px;
+            color: #64748b;
+            border-top: 1px solid #e2e8f0;
+            margin-top: 40px;
+        }
+
+        @media (max-width: 650px) {
+            .navbar {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .container {
+                width: 94%;
+            }
+
+            .page-heading h1 {
+                font-size: 26px;
+            }
+
+            .search-form {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-form input,
+            .search-form select,
+            .search-form button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVIGATION -->
+    <nav class="navbar">
+
+        <h2>PlacementHub</h2>
+
+        <div class="nav-links">
+
+            <a href="{{ url_for('dashboard') }}">
+                Home
+            </a>
+
+            <a href="{{ url_for('officer_dashboard') }}">
+                Dashboard
+            </a>
+
+            <a href="{{ url_for('logout') }}">
+                Logout
+            </a>
+
+        </div>
+
+    </nav>
+
+    <main class="container">
+
+        <!-- BACK NAVIGATION -->
+        <div class="back-links">
+
+            <a href="{{ url_for('dashboard') }}">
+                ← Back to Home
+            </a>
+
+            <a href="{{ url_for('officer_dashboard') }}">
+                ← Back to Dashboard
+            </a>
+
+        </div>
+
+        <!-- PAGE HEADING -->
+        <section class="page-heading">
+
+            <h1>Student Management</h1>
+
+            <p>
+                View, search and manage registered students.
+            </p>
+
+        </section>
+
+        <!-- FLASH MESSAGES -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+
+            {% for category, message in messages %}
+
+                <div class="flash">
+                    {{ message }}
+                </div>
+
+            {% endfor %}
+
+        {% endwith %}
+
+        <!-- SEARCH AND FILTER -->
+        <section class="card">
+
+            <form method="GET"
+                  action="{{ url_for('officer_students') }}"
+                  class="search-form">
+
+                <input
+                    type="text"
+                    name="search"
+                    placeholder="Search name, email or roll number"
+                    value="{{ search }}"
+                >
+
+                <select name="branch">
+
+                    <option value="">All Branches</option>
+
+                    {% for branch in branches %}
+
+                        <option
+                            value="{{ branch }}"
+                            {% if selected_branch == branch %}selected{% endif %}
+                        >
+                            {{ branch }}
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+                <button type="submit" class="btn">
+                    Search
+                </button>
+
+                <a href="{{ url_for('officer_students') }}"
+                   class="reset-link">
+                    Reset
+                </a>
+
+            </form>
+
+        </section>
+
+        <!-- STUDENT TABLE -->
+        <section class="card">
+
+            <h2 class="table-heading">
+                Registered Students ({{ students|length }})
+            </h2>
+
+            {% if students %}
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Roll Number</th>
+                                <th>Branch</th>
+                                <th>CGPA</th>
+                                <th>Graduation Year</th>
+                                <th>Skills</th>
+                                <th>Account Status</th>
+                                <th>Action</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            {% for user, profile in students %}
+
+                                <tr>
+
+                                    <td>
+                                        <strong>{{ user.full_name }}</strong>
+                                    </td>
+
+                                    <td>
+                                        {{ user.email }}
+                                    </td>
+
+                                    <td>
+                                        {{ profile.roll_number or 'Not provided' }}
+                                    </td>
+
+                                    <td>
+                                        {{ profile.branch or 'Not provided' }}
+                                    </td>
+
+                                    <td>
+                                        {{ profile.cgpa if profile.cgpa is not none else 'Not provided' }}
+                                    </td>
+
+                                    <td>
+                                        {{ profile.graduation_year or 'Not provided' }}
+                                    </td>
+
+                                    <td class="skills">
+                                        {{ profile.skills or 'Not provided' }}
+                                    </td>
+
+                                    <td>
+
+                                        {% if user.is_active %}
+
+                                            <span class="status active">
+                                                Active
+                                            </span>
+
+                                        {% else %}
+
+                                            <span class="status inactive">
+                                                Inactive
+                                            </span>
+
+                                        {% endif %}
+
+                                    </td>
+
+                                    <td>
+
+                                        <form
+                                            method="POST"
+                                            action="{{ url_for('toggle_student', user_id=user.id) }}"
+                                            class="action-form"
+                                            onsubmit="return confirm('Are you sure you want to change this student account status?');"
+                                        >
+
+                                            {% if user.is_active %}
+
+                                                <button
+                                                    type="submit"
+                                                    class="action-btn deactivate-btn"
+                                                >
+                                                    Deactivate
+                                                </button>
+
+                                            {% else %}
+
+                                                <button
+                                                    type="submit"
+                                                    class="action-btn activate-btn"
+                                                >
+                                                    Activate
+                                                </button>
+
+                                            {% endif %}
+
+                                        </form>
+
+                                    </td>
+
+                                </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            {% else %}
+
+                <div class="empty-message">
+
+                    <h3>No students found</h3>
+
+                    <p>
+                        Try changing your search or branch filter.
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        PlacementHub - Student Placement Management System
+    </footer>
+
+</body>
+
+</html>
